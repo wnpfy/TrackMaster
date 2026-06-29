@@ -2,33 +2,40 @@
 
 
 #include "KartCube.h"
+#include "Components/StaticMeshComponent.h"
+#include "Components/InputComponent.h" // 키 입력 처리를 위해 추가!
+#include "Engine/World.h"              // GetWorld()를 사용하기 위해 추가!
 
-// Sets default values
 AKartCube::AKartCube()
 {
- 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	CubeMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("CubeMesh"));
+	RootComponent = CubeMesh;
 }
 
-// Called when the game starts or when spawned
 void AKartCube::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
-// Called every frame
 void AKartCube::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
-// Called to bind functionality to input
 void AKartCube::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	PlayerInputComponent->BindAxis("MoveForward", this, &AKartCube::MoveForward);
 }
 
+void AKartCube::MoveForward(float Value)
+{
+	if (Value != 0.0f)
+	{
+		FVector MoveDirection = GetActorForwardVector() * Value * MoveSpeed * GetWorld()->GetDeltaSeconds();
+		AddActorLocalOffset(MoveDirection, true);
+	}
+}
