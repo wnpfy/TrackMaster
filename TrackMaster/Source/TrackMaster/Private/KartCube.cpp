@@ -12,6 +12,8 @@ AKartCube::AKartCube()
 
 	CubeMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("CubeMesh"));
 	RootComponent = CubeMesh;
+
+	 AutoPossessPlayer = EAutoReceiveInput::Player0; // ← 이거 추가!
 }
 
 void AKartCube::BeginPlay()
